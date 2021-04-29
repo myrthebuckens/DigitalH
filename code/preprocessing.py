@@ -42,7 +42,9 @@ st = nlp(st)
 mt = nlp(mt)
 
 # write sentences + character label to file
-with open('../data/sentences_with_label.tsv', 'w') as outfile:
+with open('../data/sentences_with_label.tsv', 'w', encoding = 'utf-8') as outfile:
+    header = 'sentences' + '\t' + 'label' + '\n'
+    outfile.write(header)
     for sent in ds.sents:
         if len(sent) > 3:
             outfile.write(sent.text + '\t' +'droogstoppel' + '\n')
