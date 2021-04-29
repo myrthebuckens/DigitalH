@@ -1,4 +1,6 @@
 ### creating test and training files
+### niet heel handig want geen functies gemaakt - later nog aanpassen
+
 import pandas as pd
 import spacy
 
