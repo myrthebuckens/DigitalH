@@ -1,11 +1,14 @@
-### creating test and training files
+### creating test and training files with features
 ### niet heel handig want geen functies gemaakt - later nog aanpassen
 
 import pandas as pd
 import spacy
 
 #read file
-df = pd.read_csv('../data/test.tsv', sep = '\t')
+df = pd.read_csv('../data/training.tsv', sep = '\t')
+
+#subset to leave out sentence number
+df_sub = df[['sentences', 'label']]
 
 # load Dutch spacy model
 nlp = spacy.load("nl_core_news_sm")
@@ -17,7 +20,7 @@ pos_tags = []
 dep_relations = []
 
 #extracting features
-for sents in df['sentences']:
+for sents in df_sub['sentences']:
 
     #sentence length
     sen_length = len(sents)
@@ -43,11 +46,11 @@ for sents in df['sentences']:
 
 
 #adding to df
-df['length'] = length
-df['n_words'] = nwords
-df['pos_tag'] = pos_tags
-df['dependency'] = dep_relations
+df_sub['length'] = length
+df_sub['n_words'] = nwords
+df_sub['pos_tag'] = pos_tags
+df_sub['dependency'] = dep_relations
 
 #writing to new file
-df.to_csv('../data/test_feat.tsv', sep = '\t')
+df_sub.to_csv('../data/training_feat.tsv', sep = '\t')
 
