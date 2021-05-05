@@ -2,7 +2,9 @@
 from math import floor
 import pandas as pd
 
-df = pd.read_csv('../data/sentences_with_label.tsv', sep = '\t')
+df = pd.read_csv('../data/labeled_sents.tsv', sep = '\t')
+
+print(len(df['sentences']), len(df['label']))
 
 grouped = df.groupby(df.label)
 
@@ -30,5 +32,6 @@ all_test = [dr_test, st_test, mu_test]
 test = pd.concat(all_test)
 print(test.shape)
 
-training.to_csv('../data/training.tsv', sep = '\t')
-test.to_csv('../data/test.tsv', sep = '\t')
+training.to_csv('../data/training1.tsv', sep = '\t')
+test.to_csv('../data/test1.tsv', sep = '\t')
+

@@ -24,7 +24,7 @@ def extract_features_and_labels(trainingfile, selected_features):
             else:
                 components = line.rstrip('\n').split('\t')
                 if len(components) != 7:
-                    print(len(components), components[0])
+                     print(len(components), components[0])
                 else:
                     feature_dict = {}
                     for feature_name in selected_features:

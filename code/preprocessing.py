@@ -1,4 +1,5 @@
 import spacy
+import pandas as pd
 
 # read in raw text
 with open('../data/MH1881.txt') as infile:
@@ -41,16 +42,37 @@ ds = nlp(ds)
 st = nlp(st)
 mt = nlp(mt)
 
-# write sentences + character label to file
-with open('../data/sentences_with_label.tsv', 'w', encoding = 'utf-8') as outfile:
-    header = 'sentences' + '\t' + 'label' + '\n'
-    outfile.write(header)
-    for sent in ds.sents:
-        if len(sent) > 3:
-            outfile.write(sent.text + '\t' +'droogstoppel' + '\n')
-    for sent in st.sents:
-        if len(sent) > 3:
-            outfile.write(sent.text + '\t' +'stern' + '\n')
-    for sent in mt.sents:
-        if len(sent) > 3:
-            outfile.write(sent.text + '\t' +'multatuli' + '\n')
+df = pd.DataFrame()
+
+all_sents = []
+all_labels = []
+for sent in ds.sents:
+    all_sents.append(sent.text)
+    all_labels.append('droogstoppel')
+for sent in st.sents:
+    all_sents.append(sent.text)
+    all_labels.append('stern')
+for sent in mt.sents:
+    all_sents.append(sent.text)
+    all_labels.append('multatuli')
+
+
+df['sentences'] = all_sents
+df['label'] = all_labels
+
+df.to_csv('../data/labeled_sents.tsv', sep = '\t')
+
+
+# # write sentences + character label to file
+# with open('../data/sentences_with_label.tsv', 'w', encoding = 'utf-8') as outfile:
+#     header = 'sentences' + '\t' + 'label' + '\n'
+#     outfile.write(header)
+#     for sent in ds.sents:
+#         if len(sent) > 3:
+#             outfile.write(sent.text + '\t' +'droogstoppel' + '\n')
+#     for sent in st.sents:
+#         if len(sent) > 3:
+#             outfile.write(sent.text + '\t' +'stern' + '\n')
+#     for sent in mt.sents:
+#         if len(sent) > 3:
+#             outfile.write(sent.text + '\t' +'multatuli' + '\n')
