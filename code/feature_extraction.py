@@ -5,7 +5,7 @@ import pandas as pd
 import spacy
 
 #read file
-df = pd.read_csv('../data/test1.tsv', sep = '\t')
+df = pd.read_csv('../data/training.tsv', sep = '\t')
 
 #subset to leave out sentence number
 df_sub = df[['sentences', 'label']]
@@ -52,5 +52,5 @@ df_sub['pos_tag'] = pos_tags
 df_sub['dependency'] = dep_relations
 
 #writing to new file
-df_sub.to_csv('../data/test_feat1.tsv', sep = '\t')
+df_sub.to_csv('../data/training_feat.tsv', sep = '\t')
 
