@@ -2,7 +2,7 @@ import spacy
 import pandas as pd
 
 # read in raw text
-with open('../data/MH1881.txt') as infile:
+with open('../data/MH1881_poems_excluded.txt') as infile:
     content = infile.readlines()
 
 # make separate list for each character
@@ -63,7 +63,26 @@ for sent in mt.sents:
 df['sentences'] = all_sents
 df['label'] = all_labels
 
-df.to_csv('../data/labeled_sents.tsv', sep = '\t')
+
+# count instances per character:
+# count_ds = 0
+# count_st = 0
+# count_mt = 0
+#
+# for label in all_labels:
+#     if label == 'droogstoppel':
+#         count_ds += 1
+#     if label == 'stern':
+#         count_st += 1
+#     if label == 'multatuli':
+#         count_mt += 1
+#
+# print('droogstoppel',count_ds)
+# print('stern',count_st)
+# print('multatuli', count_mt)
+
+
+df.to_csv('../data/labeled_sents_poems_excluded.tsv', sep = '\t')
 
 
 # # write sentences + character label to file
