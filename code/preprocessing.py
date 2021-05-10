@@ -47,14 +47,17 @@ df = pd.DataFrame()
 all_sents = []
 all_labels = []
 for sent in ds.sents:
-    all_sents.append(sent.text)
-    all_labels.append('droogstoppel')
+    if len(sent) > 3:
+        all_sents.append(sent.text)
+        all_labels.append('droogstoppel')
 for sent in st.sents:
-    all_sents.append(sent.text)
-    all_labels.append('stern')
+    if len(sent) > 3:
+        all_sents.append(sent.text)
+        all_labels.append('stern')
 for sent in mt.sents:
-    all_sents.append(sent.text)
-    all_labels.append('multatuli')
+    if len(sent) > 3:
+        all_sents.append(sent.text)
+        all_labels.append('multatuli')
 
 
 df['sentences'] = all_sents
