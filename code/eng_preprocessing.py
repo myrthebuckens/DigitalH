@@ -2,14 +2,14 @@ import spacy
 import pandas as pd
 
 # read in raw text
-with open('../data/MH1881_poems_excluded.txt') as infile:
+with open('../data/Multatuli_English Corpus.txt', encoding='utf-8') as infile:
     content = infile.readlines()
 
 # make separate list for each character
 # the slices are based on overview in this link: https://www.dbnl.org/tekst/sote001stru01_01/sote001stru01_01_0003.php
-droogstoppel = [content[141:1797], content[4895:5078], content[8590:8840], content[10619:11227], content[11237]]
-stern = [content[1797:4895], content[5078:8590], content[8840:10619], content[11227]]
-multatuli = [content[11229:11233], content[11239:14388]]
+droogstoppel = [content[4:1170], content[4515:4704], content[8104:8387], content[10074:10616], content[10626]]
+stern = [content[1178:4507], content[4713:8102], content[8388:10072], content[10617]]
+multatuli = [content[10619:10624], content[10628:10723]]
 
 droogstoppel = [item for sublist in droogstoppel for item in sublist]
 stern = [item for sublist in stern for item in sublist]
@@ -35,8 +35,8 @@ ds = ' '.join(ds)
 st = ' '.join(st)
 mt = ' '.join(mt)
 
-# load Dutch spacy model
-nlp = spacy.load("nl_core_news_sm")
+# load English spacy model
+nlp = spacy.load("en_core_web_sm")
 
 ds = nlp(ds)
 st = nlp(st)
@@ -82,7 +82,7 @@ df['label'] = all_labels
 # print('multatuli', count_mt)
 
 
-df.to_csv('../data/labeled_sents_poems_excluded.tsv', sep = '\t')
+df.to_csv('../data/eng_labeled_sents.tsv', sep = '\t')
 
 
 # # write sentences + character label to file

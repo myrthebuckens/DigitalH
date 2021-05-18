@@ -15,7 +15,7 @@ def extract_features_and_labels(trainingfile, selected_features):
 
     data = []
     targets = []
-    feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'pos_tag': 5, 'dependency': 6}
+    feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'pos_tag': 5, 'dependency': 6, 'trigrams': 7}
 
     with open(trainingfile, 'r', encoding='utf8') as infile:
         for i, line in enumerate(infile):
@@ -23,7 +23,7 @@ def extract_features_and_labels(trainingfile, selected_features):
                 pass
             else:
                 components = line.rstrip('\n').split('\t')
-                if len(components) != 7:
+                if len(components) != 8:
                      print(len(components), components[0])
                 else:
                     feature_dict = {}
