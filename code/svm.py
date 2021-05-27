@@ -15,7 +15,9 @@ def extract_features_and_labels(trainingfile, selected_features):
 
     data = []
     targets = []
-    feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'pos_tag': 5, 'dependency': 6, 'trigrams': 7}
+    #feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'pos_tag': 5, 'dependency': 6, 'trigrams': 7}
+    feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'trigrams': 5, 'prn_first':6, 'prn_second':7, 'prn_third':8}
+
 
     with open(trainingfile, 'r', encoding='utf8') as infile:
         for i, line in enumerate(infile):
@@ -23,8 +25,8 @@ def extract_features_and_labels(trainingfile, selected_features):
                 pass
             else:
                 components = line.rstrip('\n').split('\t')
-                if len(components) != 8:
-                     print(len(components), components[0])
+                if len(components) != 9:
+                    print(len(components), components[0])
                 else:
                     feature_dict = {}
                     for feature_name in selected_features:
@@ -32,6 +34,7 @@ def extract_features_and_labels(trainingfile, selected_features):
                         feature_dict[feature_name] = components[components_index]
                     data.append(feature_dict)
                     # the gold label is in the third column
+                    print('label: ', components[2])
                     targets.append(components[2])
     return data, targets
 
@@ -114,15 +117,17 @@ def run_classifier(trainfile, testfile):
 
     # evaluation of the performances of the other systems with the best combination
     modelname = 'SVM'
-    selected_features = ['sentences','length','n_words','pos_tag','dependency']
+    selected_features = ['sentences','length','n_words', 'trigrams', 'prn_first', 'prn_second', 'prn_third']
 
     feature_values, labels = extract_features_and_labels(trainfile, selected_features)
+    print('features, labels: ',feature_values, labels)
     classifier, vectorizer = create_classifier(feature_values, labels)
     predictions, goldlabels = get_predicted_and_gold_labels(testfile, vectorizer, classifier, selected_features)
     print()
     print('---->' + modelname + ' with ' + ' and '.join(selected_features) + ' as features <----')
     print_precision_recall_fscore(predictions, goldlabels)
     print('------')
+    print_confusion_matrix(predictions, goldlabels)
 
     # Load training data
     training = pd.read_csv(trainfile, encoding='utf-8', sep='\t')

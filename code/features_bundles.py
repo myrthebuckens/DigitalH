@@ -16,8 +16,8 @@ def feature_extraction(trainfile, output_file):
     #creating lists for features
     length = []
     nwords = []
-    pos_tags = []
-    dep_relations = []
+    #pos_tags = []
+    #dep_relations = []
     trigramslist = []
     prn_first_feat = []
     prn_second_feat = []
@@ -86,8 +86,8 @@ def feature_extraction(trainfile, output_file):
     #adding to df
     df_sub['length'] = length
     df_sub['n_words'] = nwords
-    df_sub['pos_tag'] = pos_tags
-    df_sub['dependency'] = dep_relations
+    #df_sub['pos_tag'] = pos_tags
+    #df_sub['dependency'] = dep_relations
     df_sub['trigrams'] = trigramslist
     df_sub['prn_first'] = prn_first_feat
     df_sub['prn_second'] = prn_second_feat
