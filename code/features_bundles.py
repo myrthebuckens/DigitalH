@@ -2,7 +2,6 @@ import pandas as pd
 import spacy
 import argparse
 
-
 def feature_extraction(trainfile, output_file):
 
     #read file
@@ -20,9 +19,9 @@ def feature_extraction(trainfile, output_file):
     pos_tags = []
     dep_relations = []
     trigramslist = []
-    first_prons = []
-    second_prons = []
-    third_prons = []
+    prn_first_feat = []
+    prn_second_feat = []
+    prn_third_feat = []
 
     #extracting features
     for sents in df_sub['sentences']:
@@ -52,36 +51,37 @@ def feature_extraction(trainfile, output_file):
         # dep_relations.append(dependencies)
 
         #pronouns
+        prn_first = []
+        prn_second = []
+        prn_third = []
+
         # letterlijke string match of string match surrounded by _
-        first = [' ik ', ' my ', ' myn ', ' ikzelf ', ' myzelf ', ' mij ', ' me ', ' mijne ', ' myner ', ' myne ', ' mynen ']
-        second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen']
-        third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare']
+        first = ['ik', 'my', 'myn', 'ikzelf', 'myzelf', 'mij', 'me', 'mijne', 'myner', 'myne', 'mynen', 'Ik', 'My', 'Myn', 'Ikzelf', 'Myzelf', 'Mij', 'Me', 'Mijne', 'Myner', 'Myne', 'Mynen']
+        second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen','Jy', 'Jouw', 'Jou', 'Je', 'Uw', 'U', 'Uwe', 'Uwer', 'Uwen']
+        third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare', 'Hy', 'Hij', 'Zy', 'Zij', 'Zijner', 'Zijne', 'Zyne', 'Zyner', 'Zijn', 'Haar', 'Hare']
 
-        for tokens in splitted:
-            if any tokens in first:
-                first_bool == 1
+        for word in splitted:
+            if word in first:
+                prn_first.append(1)
             else:
-                first_bool == 0
+                prn_first.append(0)
 
-            if any tokens in second:
-                second_bool == 1
+            if word in second:
+                prn_second.append(1)
             else:
-                second_bool == 0
+                prn_second.append(0)
 
-            if any tokens in third:
-                third_bool == 1
+            if word in third:
+                prn_third.append(1)
             else:
-                third_bool == 0
+                prn_third.append(0)
 
-        first_prons.append(first_bool)
-        second_prons.append(second_bool)
-        third_prons.append(third_bool)
-
-
+        prn_first_feat.append(max(prn_first))
+        prn_second_feat.append(max(prn_second))
+        prn_third_feat.append(max(prn_third))
 
         #in loop combineren met 'if pos = PRON', gaat niet lukken want niet altijd herkend als PRON
         #add to dictionary counts voor iedere pronoun, voor 'zijn' checken of het ook een pronoun is, 'haar'
-
 
     #adding to df
     df_sub['length'] = length
@@ -89,9 +89,9 @@ def feature_extraction(trainfile, output_file):
     df_sub['pos_tag'] = pos_tags
     df_sub['dependency'] = dep_relations
     df_sub['trigrams'] = trigramslist
-    df_sub['1st pronoun'] = first_prons
-    df_sub['2nd pronoun'] = second_prons
-    df_sub['3rd pronoun'] = third_prons
+    df_sub['prn_first'] = prn_first_feat
+    df_sub['prn_second'] = prn_second_feat
+    df_sub['prn_third'] = prn_third_feat
     df_sub.to_csv(output_file, sep = '\t')
 
     return df_sub
