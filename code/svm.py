@@ -34,7 +34,7 @@ def extract_features_and_labels(trainingfile, selected_features):
                         feature_dict[feature_name] = components[components_index]
                     data.append(feature_dict)
                     # the gold label is in the third column
-                    print('label: ', components[2])
+                    #print('label: ', components[2])
                     targets.append(components[2])
     return data, targets
 
@@ -120,7 +120,6 @@ def run_classifier(trainfile, testfile):
     selected_features = ['sentences','length','n_words', 'trigrams', 'prn_first', 'prn_second', 'prn_third']
 
     feature_values, labels = extract_features_and_labels(trainfile, selected_features)
-    print('features, labels: ',feature_values, labels)
     classifier, vectorizer = create_classifier(feature_values, labels)
     predictions, goldlabels = get_predicted_and_gold_labels(testfile, vectorizer, classifier, selected_features)
     print()
