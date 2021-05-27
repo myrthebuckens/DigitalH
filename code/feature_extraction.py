@@ -48,24 +48,46 @@ def feature_extraction(trainfile, output_file):
         pos_tags.append(tokens)
         dep_relations.append(dependencies)
 
-        #pronouns
         # letterlijke string match of string match surrounded by _
-        first = ['ik', 'my', 'myn', 'ikzelf', 'myzelf', 'mij', 'me', 'mijne', 'myner', 'myne', 'mynen']
-        second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen']
-        third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare']
-        #in loop combineren met 'if pos = PRON', gaat niet lukken want niet altijd herkend als PRON
-        #add to dictionary counts voor iedere pronoun, voor 'zijn' checken of het ook een pronoun is, 'haar'
+        first = [' ik ', ' my ', ' myn ', ' ikzelf ', ' myzelf ', ' mij ', ' me ', ' mijne ', ' myner ', ' myne ',
+                 ' mynen ']
+        second = [' jy ', ' jouw ', ' jou ', ' je ', ' uw ', ' u ', ' uwe ', ' uwer ', ' uwen ']
+        third = [' hy ', ' hij ', ' zy ', ' zij ', ' zijner ', ' zijne ', ' zyne ', ' zyner ', ' zijn ', ' haar ', ' hare ']
 
+        for toks in splitted:
+            if any (toks in first):
+                first_bool == 1
+            else:
+                first_bool == 0
 
-    #adding to df
+            if any (toks in second):
+                second_bool == 1
+            else:
+                second_bool == 0
+
+            if any (toks in third):
+                third_bool == 1
+            else:
+                third_bool == 0
+
+        first_prons.append(first_bool)
+        second_prons.append(second_bool)
+        third_prons.append(third_bool)
+
+        # in loop combineren met 'if pos = PRON', gaat niet lukken want niet altijd herkend als PRON
+        # add to dictionary counts voor iedere pronoun, voor 'zijn' checken of het ook een pronoun is, 'haar'
+
+    # adding to df
     df_sub['length'] = length
     df_sub['n_words'] = nwords
     df_sub['pos_tag'] = pos_tags
     df_sub['dependency'] = dep_relations
     df_sub['trigrams'] = trigramslist
-    df_sub.to_csv(output_file, sep = '\t')
+    df_sub['1st pronoun'] = first_prons
+    df_sub['2nd pronoun'] = second_prons
+    df_sub['3rd pronoun'] = third_prons
 
-    return df_sub
+    df_sub.to_csv(output_file, sep='\t')
 
 def main():
     parser = argparse.ArgumentParser()

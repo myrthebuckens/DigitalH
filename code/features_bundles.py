@@ -54,16 +54,29 @@ def feature_extraction(trainfile, output_file):
         #pronouns
         # letterlijke string match of string match surrounded by _
         first = [' ik ', ' my ', ' myn ', ' ikzelf ', ' myzelf ', ' mij ', ' me ', ' mijne ', ' myner ', ' myne ', ' mynen ']
+        second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen']
+        third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare']
+
         for tokens in splitted:
-            if tokens in first:
+            if any tokens in first:
                 first_bool == 1
             else:
                 first_bool == 0
 
-        first_prons.append(first_bool)
+            if any tokens in second:
+                second_bool == 1
+            else:
+                second_bool == 0
 
-        second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen']
-        third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare']
+            if any tokens in third:
+                third_bool == 1
+            else:
+                third_bool == 0
+
+        first_prons.append(first_bool)
+        second_prons.append(second_bool)
+        third_prons.append(third_bool)
+
 
 
         #in loop combineren met 'if pos = PRON', gaat niet lukken want niet altijd herkend als PRON
@@ -76,6 +89,9 @@ def feature_extraction(trainfile, output_file):
     df_sub['pos_tag'] = pos_tags
     df_sub['dependency'] = dep_relations
     df_sub['trigrams'] = trigramslist
+    df_sub['1st pronoun'] = first_prons
+    df_sub['2nd pronoun'] = second_prons
+    df_sub['3rd pronoun'] = third_prons
     df_sub.to_csv(output_file, sep = '\t')
 
     return df_sub
