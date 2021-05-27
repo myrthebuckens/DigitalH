@@ -2,7 +2,7 @@ import spacy
 import pandas as pd
 
 # read in raw text
-with open('../data/MH1881_poems_excluded.txt') as infile:
+with open('../data/dutch/MH1881_poems_excluded.txt') as infile:
     content = infile.readlines()
 
 # make separate list for each character

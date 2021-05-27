@@ -2,7 +2,7 @@
 from math import floor
 import pandas as pd
 
-df = pd.read_csv('../data/eng_labeled_sents.tsv', sep = '\t')
+df = pd.read_csv('../data/dutch/bundels.tsv', sep ='\t')
 
 print(len(df['sentences']), len(df['label']))
 
@@ -32,6 +32,6 @@ all_test = [dr_test, st_test, mu_test]
 test = pd.concat(all_test)
 print(test.shape)
 
-training.to_csv('../data/eng_training.tsv', sep = '\t')
-test.to_csv('../data/eng_test.tsv', sep = '\t')
+training.to_csv('../data/dutch/training_bundles.tsv', sep = '\t')
+test.to_csv('../data/dutch/test_bundles.tsv', sep = '\t')
 

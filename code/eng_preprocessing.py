@@ -2,7 +2,7 @@ import spacy
 import pandas as pd
 
 # read in raw text
-with open('../data/Multatuli_English Corpus.txt', encoding='utf-8') as infile:
+with open('../data/english/Multatuli_English Corpus.txt', encoding='utf-8') as infile:
     content = infile.readlines()
 
 # make separate list for each character
@@ -11,16 +11,17 @@ droogstoppel = [content[4:1170], content[4515:4704], content[8104:8387], content
 stern = [content[1178:4507], content[4713:8102], content[8388:10072], content[10617]]
 multatuli = [content[10619:10624], content[10628:10723]]
 
+#flattening lists
 droogstoppel = [item for sublist in droogstoppel for item in sublist]
 stern = [item for sublist in stern for item in sublist]
 multatuli = [item for sublist in multatuli for item in sublist]
-characters = [droogstoppel, stern, multatuli]
 
-# remove newlines, and remove multiple whitespaces
+#initializing lists for sentences
 ds = []
 st = []
 mt = []
 
+# remove newlines, and remove multiple whitespaces
 for line in droogstoppel:
     line = ' '.join(line.split())
     ds.append(line.strip('\n'))
@@ -42,59 +43,66 @@ ds = nlp(ds)
 st = nlp(st)
 mt = nlp(mt)
 
+#empty df for sentences
 df = pd.DataFrame()
+
+droog_sents = []
+stern_sents = []
+multatuli_sents = []
 
 all_sents = []
 all_labels = []
 for sent in ds.sents:
     if len(sent) > 3:
         all_sents.append(sent.text)
+        droog_sents.append(sent.text)
         all_labels.append('droogstoppel')
 for sent in st.sents:
     if len(sent) > 3:
         all_sents.append(sent.text)
+        stern_sents.append(sent.text)
         all_labels.append('stern')
 for sent in mt.sents:
     if len(sent) > 3:
         all_sents.append(sent.text)
+        multatuli_sents.append(sent.text)
         all_labels.append('multatuli')
 
 
 df['sentences'] = all_sents
 df['label'] = all_labels
 
+#df.to_csv('../data/eng_labeled_sents.tsv', sep = '\t')
+print(len(droog_sents))
+print(len(stern_sents))
+print(len(multatuli_sents))
 
-# count instances per character:
-# count_ds = 0
-# count_st = 0
-# count_mt = 0
-#
-# for label in all_labels:
-#     if label == 'droogstoppel':
-#         count_ds += 1
-#     if label == 'stern':
-#         count_st += 1
-#     if label == 'multatuli':
-#         count_mt += 1
-#
-# print('droogstoppel',count_ds)
-# print('stern',count_st)
-# print('multatuli', count_mt)
+#creating new df with bundled sentences
+df_bundles = pd.DataFrame()
+
+bundles_sents_droog = [droog_sents[i] + droog_sents[i+1] + droog_sents[i+2]+ droog_sents[i+3]+ droog_sents[i+4]+ droog_sents[i+5]+
+                       droog_sents[i+6]+ droog_sents[i+7]+ droog_sents[i+8]+ droog_sents[i+9]
+                        for i in range(0, (len(droog_sents)-3), 10)]
+
+droog_labels = ['droogstoppel'] * len(bundles_sents_droog)
+
+bundles_sents_stern = [stern_sents[i] + stern_sents[i+1] + stern_sents[i+2]+ stern_sents[i+3]+ stern_sents[i+4]+ stern_sents[i+5]+
+                       stern_sents[i+6]+ stern_sents[i+7]+ stern_sents[i+8]+ stern_sents[i+9]
+                        for i in range(0, (len(stern_sents)-4), 10)]
+
+stern_labels = ['stern'] * len(bundles_sents_stern)
+
+bundles_sents_multa = [multatuli_sents[i] + multatuli_sents[i+1] + multatuli_sents[i+2]+multatuli_sents[i+3]+ multatuli_sents[i+4]+
+                       multatuli_sents[i+5]+
+                       multatuli_sents[i+6]+ multatuli_sents[i+7]+ multatuli_sents[i+8]+ multatuli_sents[i+9]
+                        for i in range(0, (len(multatuli_sents)-6), 10)]
+
+multatuli_labels = ['multatuli'] * len(bundles_sents_multa)
+
+df_bundles['sentences'] = bundles_sents_droog + bundles_sents_stern + bundles_sents_multa
+df_bundles['label'] = droog_labels + stern_labels + multatuli_labels
+
+df_bundles.to_csv('../data/english/eng_bundels.tsv', sep= '\t')
 
 
-df.to_csv('../data/eng_labeled_sents.tsv', sep = '\t')
 
-
-# # write sentences + character label to file
-# with open('../data/sentences_with_label.tsv', 'w', encoding = 'utf-8') as outfile:
-#     header = 'sentences' + '\t' + 'label' + '\n'
-#     outfile.write(header)
-#     for sent in ds.sents:
-#         if len(sent) > 3:
-#             outfile.write(sent.text + '\t' +'droogstoppel' + '\n')
-#     for sent in st.sents:
-#         if len(sent) > 3:
-#             outfile.write(sent.text + '\t' +'stern' + '\n')
-#     for sent in mt.sents:
-#         if len(sent) > 3:
-#             outfile.write(sent.text + '\t' +'multatuli' + '\n')
