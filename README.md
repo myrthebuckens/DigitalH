@@ -3,7 +3,7 @@ This is the github repository for the Multatuli project for the course Digital H
 Code contributors: Myrthe Buckens and Alessandra Polimeno 
 
 ### data 
-In the data folder, you will find the following subfolders for Dutch and English data with the folling files: 
+In the data folder, you will find the following subfolders for Dutch and English data with the following files: 
 #### dutch
 * original data file with Dutch data: `MH1881.txt`
 * original data file with Dutch data, poems excluded: `MH1881_poems_excluded.txt`
