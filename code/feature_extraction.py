@@ -3,16 +3,19 @@ import spacy
 import argparse
 
 
-def feature_extraction(trainfile, output_file):
+def feature_extraction(trainfile, output_file, language):
 
     #read file
     df = pd.read_csv(trainfile, sep = '\t')
 
     #subset to leave out sentence number
-    df_sub = df[['sentences', 'label']]
+    df = df[['sentences', 'label']]
 
-    # load Dutch spacy model
-    nlp = spacy.load("nl_core_news_sm")
+    # loading spacy model
+    if language == 'en':
+        nlp = spacy.load("en_core_web_sm")
+    if language == "nl":
+        nlp = spacy.load("nl_core_news_sm")
 
     #creating lists for features
     length = []
@@ -25,7 +28,7 @@ def feature_extraction(trainfile, output_file):
     prn_third_feat = []
 
     #extracting features
-    for sents in df_sub['sentences']:
+    for sents in df['sentences']:
 
         #sentence length
         sen_length = len(sents)
@@ -55,10 +58,19 @@ def feature_extraction(trainfile, output_file):
         prn_second = []
         prn_third = []
 
-        # letterlijke string match of string match surrounded by _
-        first = ['ik', 'my', 'myn', 'ikzelf', 'myzelf', 'mij', 'me', 'mijne', 'myner', 'myne', 'mynen', 'Ik', 'My', 'Myn', 'Ikzelf', 'Myzelf', 'Mij', 'Me', 'Mijne', 'Myner', 'Myne', 'Mynen']
-        second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen','Jy', 'Jouw', 'Jou', 'Je', 'Uw', 'U', 'Uwe', 'Uwer', 'Uwen']
-        third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare', 'Hy', 'Hij', 'Zy', 'Zij', 'Zijner', 'Zijne', 'Zyne', 'Zyner', 'Zijn', 'Haar', 'Hare']
+        # literal string matches
+        if language == 'en':
+            first = ['I', 'my', 'My', 'myself', 'Myself']
+            second = ['You', 'you', 'Your', 'your', 'yourself', 'Yourself']
+            third = ['She', 'she', 'her', 'Her', 'He' 'he', 'His', 'his', 'herself', 'Herself', 'himself', 'Himself']
+
+        if language == 'nl':
+            first = ['ik', 'my', 'myn', 'ikzelf', 'myzelf', 'mij', 'me', 'mijne', 'myner', 'myne', 'mynen', 'Ik', 'My',
+                     'Myn', 'Ikzelf', 'Myzelf', 'Mij', 'Me', 'Mijne', 'Myner', 'Myne', 'Mynen']
+            second = ['jy', 'jouw', 'jou', 'je', 'uw', 'u', 'uwe', 'uwer', 'uwen', 'Jy', 'Jouw', 'Jou', 'Je', 'Uw', 'U',
+                      'Uwe', 'Uwer', 'Uwen']
+            third = ['hy', 'hij', 'zy', 'zij', 'zijner', 'zijne', 'zyne', 'zyner', 'zijn', 'haar', 'hare', 'Hy', 'Hij',
+                     'Zy', 'Zij', 'Zijner', 'Zijne', 'Zyne', 'Zyner', 'Zijn', 'Haar', 'Hare']
 
         for word in splitted:
             if word in first:
@@ -80,20 +92,17 @@ def feature_extraction(trainfile, output_file):
         prn_second_feat.append(max(prn_second))
         prn_third_feat.append(max(prn_third))
 
-        # in loop combineren met 'if pos = PRON', gaat niet lukken want niet altijd herkend als PRON
-        # add to dictionary counts voor iedere pronoun, voor 'zijn' checken of het ook een pronoun is, 'haar'
-
     # adding to df
-    df_sub['length'] = length
-    df_sub['n_words'] = nwords
-    df_sub['pos_tag'] = pos_tags
-    df_sub['dependency'] = dep_relations
-    df_sub['trigrams'] = trigramslist
-    df_sub['prn_first'] = prn_first_feat
-    df_sub['prn_second'] = prn_second_feat
-    df_sub['prn_third'] = prn_third_feat
+    df['length'] = length
+    df['n_words'] = nwords
+    df['pos_tag'] = pos_tags
+    df['dependency'] = dep_relations
+    df['trigrams'] = trigramslist
+    df['prn_first'] = prn_first_feat
+    df['prn_second'] = prn_second_feat
+    df['prn_third'] = prn_third_feat
 
-    df_sub.to_csv(output_file, sep='\t')
+    df.to_csv(output_file, sep='\t')
 
 def main():
     parser = argparse.ArgumentParser()
@@ -101,10 +110,12 @@ def main():
                         help='file path to data for feature extraction.')
     parser.add_argument('output_file',
                         help='file path to write output to.')
+    parser.add_argument("language",
+                        help = "language of data file")
 
     args = parser.parse_args()
 
-    feature_extraction(args.input_file, args.output_file)
+    feature_extraction(args.input_file, args.output_file, args.language)
 
 if __name__ == '__main__':
     main()

@@ -15,6 +15,8 @@ def extract_features_and_labels(trainingfile, selected_features):
 
     data = []
     targets = []
+
+    # change the features and indices to the corresponding columns below for the
     #feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'pos_tag': 5, 'dependency': 6, 'trigrams': 7}
     feature_to_index = {'sentences': 1, 'length': 3, 'n_words': 4, 'trigrams': 5, 'prn_first':6, 'prn_second':7, 'prn_third':8}
 
@@ -143,13 +145,12 @@ def run_classifier(trainfile, testfile):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('trainfile',
-                        help='file path to training data with the new features. Recommended path: "../data/training_feat.tsv"')
+                        help='file path to training data with the new features. Recommended path: "../data/training_features.tsv"')
     parser.add_argument('testfile',
-                        help='file path to the test data with the new features. Recommended path: "../data/test_feat.tsv"')
+                        help='file path to the test data with the new features. Recommended path: "../data/test_features.tsv"')
 
     args = parser.parse_args()
 
-    # RUN THE FEATURE ABLATION ANALYSIS ON THE FOLLOWING COMBINATIONS ON A LOGISTIC REGRESSION CLASSIFIER
     run_classifier(args.trainfile, args.testfile)
 
 if __name__ == '__main__':
